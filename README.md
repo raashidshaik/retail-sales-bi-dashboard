@@ -5,6 +5,7 @@
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
 ![Pandas](https://img.shields.io/badge/Pandas-150458?style=flat&logo=pandas&logoColor=white)
 ![Power BI](https://img.shields.io/badge/Power_BI-F2C811?style=flat&logo=powerbi&logoColor=black)
+![Dashboard Preview](retail-sales-bi-dashboard_output.png)
 ![DAX](https://img.shields.io/badge/DAX-F2C811?style=flat)
 ![Power Query](https://img.shields.io/badge/Power_Query-217346?style=flat)
 
