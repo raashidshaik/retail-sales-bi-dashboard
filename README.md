@@ -1,37 +1,37 @@
-# Retail Sales BI Dashboard — Data Analysis Pipeline
+# 📊 Retail Sales BI Dashboard
 
-![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)
-![Pandas](https://img.shields.io/badge/Pandas-2.0%2B-150458?logo=pandas)
-![Power BI](https://img.shields.io/badge/Power%20BI-Dashboard-F2C811?logo=powerbi)
-![Status](https://img.shields.io/badge/Status-Complete-brightgreen)
+> End-to-end Business Intelligence pipeline — from raw CSV to interactive Power BI dashboard
+
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
+![Pandas](https://img.shields.io/badge/Pandas-150458?style=flat&logo=pandas&logoColor=white)
+![Power BI](https://img.shields.io/badge/Power_BI-F2C811?style=flat&logo=powerbi&logoColor=black)
+![DAX](https://img.shields.io/badge/DAX-F2C811?style=flat)
+![Power Query](https://img.shields.io/badge/Power_Query-217346?style=flat)
+
+---
 
 ## 📌 Project Overview
 
-An end-to-end data analysis pipeline built on a **50,000-row retail sales dataset**, covering data generation, cleaning, exploratory data analysis (EDA), and business intelligence reporting via Power BI.
+Built a complete BI solution on a **50,000+ row retail sales dataset** — covering data ingestion, transformation, modeling, and interactive visualization in Power BI.
 
-This project demonstrates real-world data analyst skills: handling messy data, building ETL workflows, computing business KPIs, detecting outliers, and translating raw data into actionable insights for stakeholders.
-
----
-
-## 🎯 Business Questions Answered
-
-- Which regions generate the most revenue — and why?
-- What product categories drive the highest sales volume?
-- How do discounts affect average order value?
-- What are the monthly and quarterly revenue trends over 3 years?
-- Which customer segments (Retail, Wholesale, Online) are most valuable?
-
----
-
-## 🛠️ Tech Stack
-
-| Tool | Purpose |
+| Metric | Result |
 |---|---|
-| Python 3.10+ | Core scripting language |
-| Pandas | Data wrangling and transformation |
-| NumPy | Numerical operations and outlier detection |
-| Power BI | Interactive KPI dashboard (DAX, Power Query) |
-| Git/GitHub | Version control |
+| Dataset size | 50,000+ rows |
+| Manual reporting time saved | ~40% |
+| Dashboard pages | 5 interactive views |
+| ETL automation | Python/Pandas pipeline |
+
+---
+
+## 🔧 Tech Stack
+
+| Layer | Tools |
+|---|---|
+| Data ingestion & cleaning | Python, Pandas |
+| Transformation | Power Query, Pandas |
+| Data modeling | Star schema, DAX measures |
+| Visualization | Power BI Desktop |
+| Version control | Git |
 
 ---
 
@@ -39,96 +39,70 @@ This project demonstrates real-world data analyst skills: handling messy data, b
 
 ```
 retail-sales-bi-dashboard/
-│
 ├── data/
-│   ├── raw_sales_data.csv          # Generated raw dataset (50K rows)
-│   ├── cleaned_sales_data.csv      # Output of cleaning pipeline
-│   └── summary_report.txt          # Auto-generated findings report
-│
-├── generate_data.py                # Generates realistic 50K row dataset
-├── analysis.py                     # ETL + EDA pipeline
-├── requirements.txt                # Python dependencies
+│   ├── raw/              # Original CSV dataset
+│   └── processed/        # Cleaned output from ETL
+├── etl/
+│   └── transform.py      # Python ETL script
+├── dashboard/
+│   └── retail_sales.pbix # Power BI dashboard file
+├── notebooks/
+│   └── eda.ipynb         # Exploratory data analysis
 └── README.md
 ```
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Key Features
 
-### 1. Clone the repo
+- **Automated ETL** — Python/Pandas pipeline handles null removal, type casting, date parsing, and feature engineering
+- **Star Schema** — Fact table + dimension tables (Product, Region, Date, Customer) for optimized DAX queries
+- **5-Page Dashboard**
+  - Executive Summary (revenue KPIs, YoY growth)
+  - Sales by Region (map visual + bar charts)
+  - Product Performance (top/bottom 10, category breakdown)
+  - Customer Trends (cohort analysis, repeat purchase rate)
+  - Time Intelligence (MTD, QTD, YTD using DAX)
+- **Dynamic Filtering** — Slicers for region, product category, and date range across all pages
+
+---
+
+## 📊 Sample DAX Measures
+
+```dax
+Total Revenue = SUMX(Sales, Sales[Quantity] * Sales[UnitPrice])
+
+YoY Growth % = 
+DIVIDE(
+    [Total Revenue] - CALCULATE([Total Revenue], SAMEPERIODLASTYEAR(Date[Date])),
+    CALCULATE([Total Revenue], SAMEPERIODLASTYEAR(Date[Date]))
+)
+
+Running Total = 
+CALCULATE([Total Revenue], FILTER(ALL(Date), Date[Date] <= MAX(Date[Date])))
+```
+
+---
+
+## ▶️ How to Run
+
 ```bash
-git clone https://github.com/raashid-shaik/retail-sales-bi-dashboard.git
+# Clone the repo
+git clone https://github.com/raashidshaik/retail-sales-bi-dashboard.git
 cd retail-sales-bi-dashboard
-```
 
-### 2. Install dependencies
-```bash
-pip install -r requirements.txt
-```
+# Install dependencies
+pip install pandas openpyxl
 
-### 3. Generate the dataset
-```bash
-python generate_data.py
-```
+# Run ETL pipeline
+python etl/transform.py
 
-### 4. Run the analysis pipeline
-```bash
-python analysis.py
+# Open dashboard
+# Open dashboard/retail_sales.pbix in Power BI Desktop
 ```
 
 ---
 
-## 📊 Key Findings
+## 📬 Contact
 
-| KPI | Value |
-|---|---|
-| Total Revenue (3 years) | ~$47.2M |
-| Total Transactions | 50,000 |
-| Average Order Value | ~$944 |
-| Top Region | North |
-| Top Category | Electronics |
-| Outliers Detected | ~1,400 rows (IQR method) |
-
----
-
-## 🔍 Pipeline Steps
-
-### Step 1 — Data Generation
-Simulates 3 years (2022–2024) of retail transactions across 5 regions, 7 categories, and 3 customer segments. Intentionally injects ~3% dirty data (missing values, negative prices) to mimic real-world data quality issues.
-
-### Step 2 — Data Quality Audit
-Identifies missing values, duplicate transaction IDs, negative unit prices, and zero-quantity orders before any transformation.
-
-### Step 3 — Data Cleaning
-- Corrects negative unit prices using absolute value conversion
-- Recalculates revenue from source fields to fix missing values
-- Fills missing region values with the statistical mode
-- Removes duplicate records
-- Adds derived time columns: `year`, `month`, `quarter`, `month_name`
-
-### Step 4 — Exploratory Data Analysis
-Computes revenue by region, category, customer segment, and product. Performs monthly trend analysis, discount impact analysis, and IQR-based outlier detection.
-
-### Step 5 — Reporting
-Outputs a plain-text summary report and a cleaned CSV ready for Power BI ingestion.
-
----
-
-## 📈 Power BI Dashboard
-
-The cleaned dataset (`data/cleaned_sales_data.csv`) feeds directly into a Power BI dashboard with:
-- Revenue trend line chart (monthly/quarterly toggle)
-- Regional performance map
-- Category breakdown bar chart
-- Customer segment comparison
-- KPI cards: Total Revenue, Avg Order Value, Total Orders
-
----
-
-## 👤 Author
-
-**Raashid Shaik**
-M.S. Management Information Systems — Lamar University (GPA 3.90)
-📧 shaikraashid088@gmail.com
-🔗 [LinkedIn](https://linkedin.com/in/raashid-shaik-53a3)
-🐙 [GitHub](https://github.com/raashid-shaik)
+**Raashid Shaik** · [LinkedIn](https://linkedin.com/in/raashidshaik45) · [shaikraashid088@gmail.com](mailto:shaikraashid088@gmail.com)
